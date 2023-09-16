@@ -1,4 +1,5 @@
 import React, { SyntheticEvent } from "react";
+import { getWinner } from "./utils";
 
 const initialState = {
   1: "",
@@ -14,12 +15,16 @@ const initialState = {
 
 function App() {
   const [gridValues, setGridValues] = React.useState(initialState);
-  const [currentPlayer, setCurrentPlayer] = React.useState("x");
+  const [currentPlayer, setCurrentPlayer] = React.useState<"x" | "o">("x");
+  const [winner, setWinner] = React.useState<"x" | "o" | null>();
 
   function onCellClick(e: SyntheticEvent<HTMLButtonElement>) {
     const cellId = e.currentTarget.id;
-    setGridValues((prev) => ({ ...prev, [cellId]: currentPlayer }));
+    const nextGridValues = { ...gridValues, [cellId]: currentPlayer };
+    setGridValues(nextGridValues);
     setCurrentPlayer((prev) => (prev === "x" ? "o" : "x"));
+    const winner = getWinner(nextGridValues, currentPlayer);
+    setWinner(winner);
   }
 
   return (
@@ -32,12 +37,13 @@ function App() {
             key={key}
             className="rounded-none"
             onClick={onCellClick}
-            disabled={Boolean(value)}
+            disabled={Boolean(value) || Boolean(winner)}
           >
             {value}
           </button>
         ))}
       </div>
+      {winner && <h2>Winner: {winner}</h2>}
     </main>
   );
 }

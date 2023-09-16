@@ -9,8 +9,29 @@ const POSIBLE_WINS_SHEET = [
   [3, 5, 7],
 ];
 
-function getWinner(gameState, currentPlayer: "x" | "o") {
-  const currentPlays = Object.entries(gameState)
-    .filter(([key, value]) => value === currentPlayer)
-    .map(([key]) => key);
+export function getWinner(
+  gameState: any,
+  currentPlayer: "x" | "o",
+): "x" | "o" | null {
+  let win = false;
+  const currentPlays = Object.entries(gameState).filter(
+    ([, value]) => value === currentPlayer,
+  );
+  POSIBLE_WINS_SHEET.forEach((solution) => {
+    let ocurrences = 0;
+    solution.forEach((index) => {
+      const isCellFilled = currentPlays.some(
+        ([play]) => Number(play) === index,
+      );
+      if (isCellFilled) ocurrences += 1;
+    });
+
+    if (ocurrences === 3) {
+      win = true;
+    }
+  });
+
+  if (win) return currentPlayer;
+
+  return null;
 }
