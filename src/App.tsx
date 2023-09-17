@@ -1,4 +1,5 @@
 import React, { SyntheticEvent } from "react";
+import classNames from "classnames";
 import { getWinner } from "./utils";
 
 type TicTacToeGame = {
@@ -35,6 +36,7 @@ const initialGames = {
 
 function App() {
   const [games, setGames] = React.useState<GamesGridType>(initialGames);
+  const [unlockedGame, setUnlockedGame] = React.useState<number | null>(null);
   const [currentPlayer, setCurrentPlayer] = React.useState<"x" | "o">("x");
   const [winner, setWinner] = React.useState<"x" | "o" | null>();
 
@@ -48,6 +50,7 @@ function App() {
     setCurrentPlayer((prev) => (prev === "x" ? "o" : "x"));
     const winner = getWinner(nextGridValues, currentPlayer);
     setWinner(winner);
+    setUnlockedGame(Number(cellId));
   }
 
   return (
@@ -63,9 +66,15 @@ function App() {
               <button
                 id={`${gameId}-${cellId}`}
                 key={cellId}
-                className="rounded-none p-0"
+                className={classNames("rounded-none p-0", {
+                  "bg-gray-400":
+                    Number(gameId) !== unlockedGame && unlockedGame !== null,
+                })}
                 onClick={onCellClick}
-                disabled={Boolean(value) || Boolean(winner)}
+                disabled={
+                  Boolean(value) ||
+                  (Number(gameId) !== unlockedGame && unlockedGame !== null)
+                }
               >
                 {value}
               </button>
