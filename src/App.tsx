@@ -48,6 +48,13 @@ function App() {
     null,
   );
 
+  function resetGame() {
+    setGames(initialGames);
+    setUnlockedGame(null);
+    setCurrentPlayer("x");
+    setGameWinner(null);
+  }
+
   function onCellClick(e: SyntheticEvent<HTMLButtonElement>) {
     const id = e.currentTarget.id;
     const [gameId, cellId] = id.split("-");
@@ -79,28 +86,28 @@ function App() {
   }
 
   return (
-    <main>
-      <h1 className="font-bold">Super tic-tac-toe</h1>
-      <div className="grid grid-cols-3 gap-1 p-1 border border-black">
+    <main className="flex flex-col gap-6 items-center text-center mt-5">
+      <h1 className="text-5xl font-bold">Super tic-tac-toe</h1>
+      <div className="grid grid-cols-3 p-1 border border-black bg-black">
         {Object.entries(games).map(([gameId, gameInfo]) =>
           gameInfo.winner ? (
             <b
               key={gameId}
-              className="font-bold text-4xl border border-black text-center"
+              className="flex justify-center items-center font-bold text-5xl border-4 bg-white border-black"
             >
               {gameInfo.winner}
             </b>
           ) : (
             <div
               key={gameId}
-              className="grid grid-cols-3 grid-rows-3 bg-black gap-1 p-1 w-52 h-52 border border-black"
+              className="grid grid-cols-3 grid-rows-3 bg-black gap-1 p-1 w-52 h-52"
             >
               {Object.entries(gameInfo.game).map(([cellId, value]) => (
                 <button
                   id={`${gameId}-${cellId}`}
                   key={cellId}
-                  className={classNames("rounded-none p-0", {
-                    "bg-gray-400":
+                  className={classNames("rounded-none p-0 text-2xl bg-white", {
+                    "bg-gray-500":
                       Number(gameId) !== unlockedGame && unlockedGame !== null,
                   })}
                   onClick={onCellClick}
@@ -116,7 +123,17 @@ function App() {
           ),
         )}
       </div>
-      {gameWinner && <h2>Winner: {gameWinner}</h2>}
+      {gameWinner && (
+        <div className="flex flex-col gap-3">
+          <h2 className="font-bold text-2xl">The winner is: x{gameWinner}</h2>
+          <button
+            className="bg-green-600 text-white rounded-full p-3 font-bold"
+            onClick={resetGame}
+          >
+            Reset game
+          </button>
+        </div>
+      )}
     </main>
   );
 }
