@@ -12,11 +12,16 @@ const POSIBLE_WINS_SHEET = [
 export function getWinner(
   gameState: any,
   currentPlayer: "x" | "o",
-): "x" | "o" | null {
+): "x" | "o" | "draw" | null {
   let win = false;
   const currentPlays = Object.entries(gameState).filter(
     ([, value]) => value === currentPlayer,
   );
+
+  // The game is a draw
+  if (Object.values(gameState).filter((item) => Boolean(item)).length === 9)
+    return "draw";
+
   POSIBLE_WINS_SHEET.forEach((solution) => {
     let ocurrences = 0;
     solution.forEach((index) => {
