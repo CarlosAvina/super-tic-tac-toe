@@ -1,3 +1,4 @@
+"use client";
 import React, { SyntheticEvent } from "react";
 import classNames from "classnames";
 import { getWinner } from "./utils";
@@ -40,7 +41,7 @@ const initialGames = {
   9: initialGameState,
 };
 
-function App() {
+export default function Home() {
   const [games, setGames] = React.useState<GamesGridType>(initialGames);
   const [unlockedGame, setUnlockedGame] = React.useState<number | null>(null);
   const [currentPlayer, setCurrentPlayer] = React.useState<"x" | "o">("x");
@@ -107,7 +108,7 @@ function App() {
                   id={`${gameId}-${cellId}`}
                   key={cellId}
                   className={classNames("rounded-none p-0 text-2xl bg-white", {
-                    "bg-gray-500":
+                    "bg-gray-600":
                       Number(gameId) !== unlockedGame && unlockedGame !== null,
                   })}
                   onClick={onCellClick}
@@ -137,5 +138,3 @@ function App() {
     </main>
   );
 }
-
-export default App;
